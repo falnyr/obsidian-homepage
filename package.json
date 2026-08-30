@@ -5,6 +5,7 @@
 	"main": "main.js",
 	"scripts": {
 		"dev": "node build.mjs",
+		"dev:vault": "node build.mjs \"../.obsidian/plugins/homepage/main.js\"",
 		"build": "node build.mjs production",
 		"test": "node build.mjs test"
 	},
