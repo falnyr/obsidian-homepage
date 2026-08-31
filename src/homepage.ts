@@ -4,6 +4,8 @@ import { PERIODIC_KINDS, getJournalNote, getPeriodicNote, hasJournal } from "./p
 import { tr } from "./locale";
 import { DEFAULT_DATA } from "./settings";
 import { detachAllLeaves, emptyActiveView, equalsCaseless, hasLayoutChange, randomFile, sleep, trimFile, untrimName } from "./utils";
+import { RSSView, VIEW_TYPE_RSS } from "./rss/view";
+import { RssCache } from "./rss/types";
 
 export const LEAF_TYPES: string[] = ["markdown", "canvas", "kanban", "bases"];
 
@@ -25,8 +27,11 @@ export interface HomepageData {
 	pin: boolean,
 	commands: CommandData[],
 	alwaysApply: boolean,
-	hideReleaseNotes: boolean
-} 
+	hideReleaseNotes: boolean,
+	rssUrl: string,
+	rssRefreshMinutes: number,
+	rssCache: RssCache | null
+}
 
 export interface CommandData {
 	id: string,
@@ -58,7 +63,8 @@ export enum Kind {
 	DailyNote = "Daily Note",
 	WeeklyNote = "Weekly Note",
 	MonthlyNote = "Monthly Note",
-	YearlyNote = "Yearly Note"
+	YearlyNote = "Yearly Note",
+	RSS = "RSS"
 }
 
 export enum Period {
@@ -67,8 +73,8 @@ export enum Period {
 	Manual = "Manual only"
 }
 
-export const UNCHANGEABLE: Kind[] = [Kind.Random, Kind.Graph, Kind.None, ...PERIODIC_KINDS];
-export const ILLEGIBLE: Kind[] = [Kind.None, Kind.Graph, Kind.Workspace];
+export const UNCHANGEABLE: Kind[] = [Kind.Random, Kind.Graph, Kind.None, Kind.RSS, ...PERIODIC_KINDS];
+export const ILLEGIBLE: Kind[] = [Kind.None, Kind.Graph, Kind.Workspace, Kind.RSS];
 
 export class Homepage {
 	plugin: HomepagePlugin;
@@ -108,10 +114,16 @@ export class Homepage {
 		if (this.data.kind as Kind === Kind.Workspace) {
 			await this.launchWorkspace();
 		}
+		else if (this.data.kind as Kind === Kind.RSS) {
+			let mode = this.plugin.loaded ? this.data.manualOpenMode : this.data.openMode;
+			if (alternate) mode = Mode.Retain;
+
+			await this.launchRSS(mode as Mode);
+		}
 		else if (this.data.kind as Kind !== Kind.None) {
 			let mode = this.plugin.loaded ? this.data.manualOpenMode : this.data.openMode;
 			if (alternate) mode = Mode.Retain;
-			
+
 			await this.launchLeaf(mode as Mode);
 		}
 		
@@ -138,6 +150,40 @@ export class Homepage {
 		await sleep(100);
 	}
 	
+	async launchRSS(mode: Mode): Promise<void> {
+		this.plugin.executing = true;
+
+		try {
+			// Reuse an already-open RSS view unless we are replacing everything.
+			if (mode !== Mode.ReplaceAll) {
+				const existing = this.app.workspace.getLeavesOfType(VIEW_TYPE_RSS);
+
+				if (existing.length > 0) {
+					this.app.workspace.setActiveLeaf(existing[0]);
+					await (existing[0].view as RSSView).render();
+					return;
+				}
+			}
+
+			if (mode === Mode.ReplaceAll) {
+				if (this.app.workspace?.floatingSplit?.children) {
+					await sleep(0);
+					(this.app.workspace.floatingSplit.children as WorkspaceWindow[]).forEach(c => c.win.close());
+				}
+
+				await detachAllLeaves(this.app);
+				await sleep(0);
+			}
+
+			const leaf = this.app.workspace.getLeaf(mode === Mode.Retain);
+			await leaf.setViewState({ type: VIEW_TYPE_RSS, active: true });
+			this.app.workspace.setActiveLeaf(leaf);
+		}
+		finally {
+			this.plugin.executing = false;
+		}
+	}
+
 	async launchLeaf(mode: Mode): Promise<void> {
 		let leaf: WorkspaceLeaf;
 

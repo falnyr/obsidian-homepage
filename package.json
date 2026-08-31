@@ -6,7 +6,9 @@
 	"scripts": {
 		"dev": "node build.mjs",
 		"build": "node build.mjs production",
-		"test": "node build.mjs test"
+		"test": "node build.mjs test",
+		"dev:vault": "node build.mjs \"../.obsidian/plugins/homepage/main.js\"",
+		"test:unit": "vitest run"
 	},
 	"keywords": [],
 	"author": "novov",
@@ -22,9 +24,11 @@
 		"esbuild-plugin-copy": "^2.1.1",
 		"eslint": "^10.3.0",
 		"eslint-plugin-obsidianmd": "^0.3.0",
+		"jsdom": "^25.0.0",
 		"opener": "^1.5.2",
 		"tslib": "^2.3.0",
 		"typescript": "^6.0.3",
-		"typescript-eslint": "^8.59.3"
+		"typescript-eslint": "^8.59.3",
+		"vitest": "^2.1.0"
 	}
 }

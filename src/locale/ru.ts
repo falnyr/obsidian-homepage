@@ -27,7 +27,8 @@ export const RU: Record<string, string> = {
 	[Kind.WeeklyNote]: "Еженедельная заметка",
 	[Kind.MonthlyNote]: "Ежемесячная заметка",
 	[Kind.YearlyNote]: "Ежегодная заметка",
-	
+	[Kind.RSS]: "RSS",
+
 	//Period enum
 	[Period.Both]: "Оба варианта",
 	[Period.Startup]: "Только при запуске",
@@ -89,7 +90,18 @@ export const RU: Record<string, string> = {
 	refreshDataview: "Обновлять Dataview",
 	refreshDataviewDesc: "Перезагружать представления Dataview при открытии домашней страницы.",
 	refreshDataviewWarn: "Требуется включенное автообновление Dataview.",
-		
+
+	//RSS settings
+	rssGroup: "RSS-лента",
+	rssUrl: "URL ленты",
+	rssUrlDesc: "Лента RSS 2.0 или Atom 1.0 для отображения.",
+	rssRefreshMinutes: "Интервал обновления (минуты)",
+	rssRefreshMinutesDesc: "Повторно загружать ленту при открытии домашней страницы, если с последней загрузки прошло больше указанного времени. Минимум 5 минут.",
+	rssInvalidUrl: "Укажите корректный URL ленты (http:// или https://).",
+	rssFetchError: `Не удалось загрузить ленту: ?0`,
+	rssShowingCached: `Показаны сохранённые записи — последнее обновление ?0.`,
+	rssNoItems: "В этой ленте нет записей.",
+
 	//Settings UI messages
 	"FileDesc": "Укажите заметку, базу или canvas.",
 	"WorkspaceDesc": "Укажите рабочее пространство Obsidian.",
@@ -103,6 +115,7 @@ export const RU: Record<string, string> = {
 	"Weekly noteDesc": "Будет использована еженедельная заметка.",
 	"Monthly noteDesc": "Будет использована ежемесячная заметка.",
 	"Yearly noteDesc": "Будет использована ежегодная заметка.",
+	"RSSDesc": "Укажите URL ленты RSS или Atom. Последние записи отображаются в виде карточек.",
 	homepageSettingTitle: "Homepage",
 	pluginUnavailableSettings: `Необходимый плагин недоступен.`,
 	copyDebugInfoNotice: "Отладочная информация домашней страницы скопирована в буфер обмена",

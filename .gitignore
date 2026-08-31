@@ -16,6 +16,7 @@ data.json
 # testing
 tests/*/
 !tests/vault/
+!tests/unit/
 tests/vault/.obsidian/plugins/*/*
 !tests/vault/.obsidian/plugins/*/data.json
 tests/vault/.obsidian/workspace.json

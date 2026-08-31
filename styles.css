@@ -220,3 +220,88 @@ button.nv-debug-button {
 	height: 100%;
 	margin: 0;
 }
+
+/* RSS homepage view */
+.nv-rss-container {
+	max-width: 760px;
+	margin: 0 auto;
+	padding: var(--size-4-4) var(--size-4-4) var(--size-4-8);
+}
+
+.nv-rss-banner {
+	font-size: var(--font-ui-smaller);
+	margin-bottom: var(--size-4-3);
+	padding: var(--size-2-2) var(--size-4-2);
+	border-radius: var(--radius-s);
+	background-color: var(--background-secondary);
+}
+
+.nv-rss-card {
+	background-color: var(--background-secondary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m);
+	padding: var(--size-4-3) var(--size-4-4);
+	margin-bottom: var(--size-4-3);
+}
+
+.nv-rss-title {
+	display: block;
+	font-size: var(--font-ui-large);
+	font-weight: 600;
+	color: var(--text-normal);
+	text-decoration: none;
+	margin-bottom: var(--size-2-2);
+}
+
+.nv-rss-title:hover {
+	color: var(--text-accent);
+	text-decoration: underline;
+}
+
+.nv-rss-meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--size-2-2);
+	margin-bottom: var(--size-2-3);
+	font-size: var(--font-ui-smaller);
+	color: var(--text-muted);
+}
+
+.nv-rss-tag {
+	background-color: var(--background-modifier-hover);
+	color: var(--text-muted);
+	border-radius: var(--radius-s);
+	padding: 0 var(--size-2-2);
+	font-size: var(--font-ui-smaller);
+}
+
+.nv-rss-summary {
+	color: var(--text-normal);
+	font-size: var(--font-ui-small);
+	line-height: var(--line-height-normal);
+	overflow-wrap: anywhere;
+}
+
+.nv-rss-summary img {
+	max-width: 100%;
+	height: auto;
+}
+
+.nv-rss-empty, .nv-rss-message {
+	color: var(--text-muted);
+	text-align: center;
+	padding: var(--size-4-8) var(--size-4-4);
+	display: flex;
+	gap: var(--size-2-2);
+	align-items: center;
+	justify-content: center;
+}
+
+.nv-rss-message.mod-warning {
+	color: var(--text-error);
+}
+
+.nv-rss-message-icon {
+	display: inline-flex;
+}

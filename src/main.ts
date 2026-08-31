@@ -2,6 +2,7 @@ import { Notice, Keymap, Platform, Plugin, WorkspaceLeaf } from "obsidian";
 import { DEFAULT, MOBILE, Homepage, Kind, Period } from "./homepage";
 import { hasRequiredPeriodicity, LEGACY_MOMENT_KIND } from "./periodic";
 import { DEFAULT_SETTINGS, HomepageSettings, HomepageSettingTab } from "./settings";
+import { RSSView, VIEW_TYPE_RSS } from "./rss/view";
 import { tr } from "./locale";
 
 declare const DEV: boolean;
@@ -39,6 +40,8 @@ export default class HomepagePlugin extends Plugin {
 		)
 		.setAttribute("id", "nv-homepage-icon");
 				
+		this.registerView(VIEW_TYPE_RSS, leaf => new RSSView(leaf, this));
+
 		this.registerEvent(this.app.workspace.on("layout-change", this.onLayoutChange));
 		this.addSettingTab(new HomepageSettingTab(this.app, this));
 

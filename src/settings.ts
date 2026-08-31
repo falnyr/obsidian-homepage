@@ -4,6 +4,8 @@ import { UNCHANGEABLE, HomepageData, Kind, Mode, View } from "./homepage";
 import { PERIODIC_KINDS } from "./periodic";
 import { SUGGESTORS, CommandBox } from "./ui";
 import { tr } from "./locale";
+import { DEFAULT_REFRESH_MINUTES, MIN_REFRESH_MINUTES } from "./rss/types";
+import { isValidFeedUrl } from "./rss/format";
 
 type HomepageKey<T> = { [K in keyof HomepageData]: HomepageData[K] extends T ? K : never }[keyof HomepageData];
 type HomepageObject = { [key: string]: HomepageData }
@@ -36,7 +38,10 @@ export const DEFAULT_DATA: HomepageData = {
 	pin: false,
 	commands: [],
 	alwaysApply: false,
-	hideReleaseNotes: false
+	hideReleaseNotes: false,
+	rssUrl: "",
+	rssRefreshMinutes: DEFAULT_REFRESH_MINUTES,
+	rssCache: null
 };
 
 export class HomepageSettingTab extends PluginSettingTab {
@@ -112,7 +117,11 @@ export class HomepageSettingTab extends PluginSettingTab {
 					});
 				}
 				
-				if (UNCHANGEABLE.includes(kind)) {
+				if (kind === Kind.RSS) {
+					// RSS renders its own feed-URL + refresh-interval fields below;
+					// no generic file text input applies.
+				}
+				else if (UNCHANGEABLE.includes(kind)) {
 					setting.addText(text => {
 						text.setDisabled(true);
 					});
@@ -130,6 +139,47 @@ export class HomepageSettingTab extends PluginSettingTab {
 				}
 			});
 		
+		if (kind === Kind.RSS) {
+			const rssGroup = new HomepageSettingGroup(this, "rssGroup");
+
+			rssGroup.addSetting(setting => {
+				setting
+					.setName(tr("rssUrl"))
+					.setDesc(tr("rssUrlDesc"))
+					.addText(text => {
+						text.setPlaceholder("https://example.com/feed.xml")
+							.setValue(this.plugin.homepage.data.rssUrl)
+							.onChange(async value => {
+								this.plugin.homepage.data.rssUrl = value.trim();
+								await this.plugin.homepage.save();
+							});
+					});
+
+				if (this.plugin.homepage.data.rssUrl && !isValidFeedUrl(this.plugin.homepage.data.rssUrl)) {
+					setting.descEl.createDiv({ text: tr("rssInvalidUrl"), cls: "mod-warning" });
+				}
+			});
+
+			rssGroup.addSetting(setting => {
+				setting
+					.setName(tr("rssRefreshMinutes"))
+					.setDesc(tr("rssRefreshMinutesDesc"))
+					.addText(text => {
+						text.inputEl.type = "number";
+						text.inputEl.min = String(MIN_REFRESH_MINUTES);
+						text.setValue(String(this.plugin.homepage.data.rssRefreshMinutes))
+							.onChange(async value => {
+								const parsed = Number.parseInt(value, 10);
+								const minutes = Number.isNaN(parsed)
+									? DEFAULT_REFRESH_MINUTES
+									: Math.max(MIN_REFRESH_MINUTES, parsed);
+								this.plugin.homepage.data.rssRefreshMinutes = minutes;
+								await this.plugin.homepage.save();
+							});
+					});
+			});
+		}
+
 		const primaryGroup = new HomepageSettingGroup(this)
 			.addToggle(
 				"openOnStartup",
@@ -207,7 +257,7 @@ export class HomepageSettingTab extends PluginSettingTab {
 			vaultGroup.disableSettings("openMode", "manualOpenMode", "autoCreate", "pin")
 		}
 		
-		if ([Kind.Workspace, Kind.None, Kind.Graph].includes(kind)) {
+		if ([Kind.Workspace, Kind.None, Kind.Graph, Kind.RSS].includes(kind)) {
 			openingGroup.disableAll();
 		}
 		

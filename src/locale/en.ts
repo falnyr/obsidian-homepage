@@ -27,7 +27,8 @@ export const EN: Record<string, string> = {
 	[Kind.WeeklyNote]: "Weekly Note",
 	[Kind.MonthlyNote]: "Monthly Note",
 	[Kind.YearlyNote]: "Yearly Note",
-	
+	[Kind.RSS]: "RSS",
+
 	//Period enum
 	[Period.Both]: "Both",
 	[Period.Startup]: "Startup only",
@@ -95,7 +96,18 @@ export const EN: Record<string, string> = {
 	refreshDataview: "Refresh Dataview",
 	refreshDataviewDesc: "Always attempt to reload Dataview views when opening the homepage",
 	refreshDataviewWarn: "Requires Dataview auto-refresh to be enabled.",
-		
+
+	//RSS settings
+	rssGroup: "RSS feed",
+	rssUrl: "Feed URL",
+	rssUrlDesc: "The RSS 2.0 or Atom 1.0 feed to display.",
+	rssRefreshMinutes: "Refresh interval (minutes)",
+	rssRefreshMinutesDesc: "Re-fetch the feed when opening the homepage if the last fetch is older than this. Minimum 5 minutes.",
+	rssInvalidUrl: "Enter a valid http:// or https:// feed URL.",
+	rssFetchError: `Couldn't load the feed: ?0`,
+	rssShowingCached: `Showing cached items — last updated ?0.`,
+	rssNoItems: "This feed has no items.",
+
 	//Settings UI messages
 	"FileDesc": "Enter a note, base, or canvas to use.",
 	"WorkspaceDesc": "Enter an Obsidian workspace to use.",
@@ -109,6 +121,7 @@ export const EN: Record<string, string> = {
 	"Weekly noteDesc": "Your Periodic Weekly Note will be used.",
 	"Monthly noteDesc": "Your Periodic Monthly Note will be used.",
 	"Yearly noteDesc": "Your Periodic Yearly Note will be used.",
+	"RSSDesc": "Enter an RSS or Atom feed URL. Recent items are shown as cards.",
 	homepageSettingTitle: "Homepage",
 	pluginUnavailableSettings: `The plugin required for this homepage type isn't available.`,
 	copyDebugInfoNotice: "Copied homepage debug information to clipboard",
