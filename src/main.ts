@@ -1,7 +1,9 @@
 import { Notice, Keymap, Platform, Plugin, WorkspaceLeaf } from "obsidian";
-import { DEFAULT, MOBILE, Homepage, Kind, Period } from "./homepage";
+import { DEFAULT, MOBILE, Homepage, Kind, Period, RSS_VIEW_TYPE } from "./homepage";
 import { hasRequiredPeriodicity, LEGACY_MOMENT_KIND } from "./periodic";
 import { DEFAULT_SETTINGS, HomepageSettings, HomepageSettingTab } from "./settings";
+import { FeedCache } from "./rss";
+import { RssItemView } from "./rss-view";
 import { tr } from "./locale";
 
 declare const DEV: boolean;
@@ -17,8 +19,9 @@ export default class HomepagePlugin extends Plugin {
 	
 	loaded: boolean = false;
 	executing: boolean = false;
-	
+
 	interstitial: HTMLElement;
+	rssCache: FeedCache = new FeedCache();
 	
 	async onload(): Promise<void> {
 		this.patchReleaseNotes();
@@ -39,6 +42,8 @@ export default class HomepagePlugin extends Plugin {
 		)
 		.setAttribute("id", "nv-homepage-icon");
 				
+		this.registerView(RSS_VIEW_TYPE, leaf => new RssItemView(leaf, this));
+
 		this.registerEvent(this.app.workspace.on("layout-change", this.onLayoutChange));
 		this.addSettingTab(new HomepageSettingTab(this.app, this));
 
@@ -82,6 +87,7 @@ export default class HomepagePlugin extends Plugin {
 	
 	onunload(): void {
 		this.app.workspace.off("layout-change", this.onLayoutChange)
+		this.app.workspace.detachLeavesOfType(RSS_VIEW_TYPE);
 		this.unpatchNewTabPage();
 		this.unpatchOpeningBehaviour();
 		

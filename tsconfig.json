@@ -25,5 +25,7 @@
 			"es2021"
 		]
 	},
-	"include": ["**/*.ts"]
+	"include": ["**/*.ts"],
+	"comment_exclude": "Headless bun-test files (*.test.ts) run under `bun test`, which supplies its own types; they are outside the plugin's esbuild/tsc build and the in-Obsidian harness.",
+	"exclude": ["tests/**/*.test.ts"]
 }

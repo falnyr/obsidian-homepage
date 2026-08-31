@@ -7,6 +7,11 @@ import { detachAllLeaves, emptyActiveView, equalsCaseless, hasLayoutChange, rand
 
 export const LEAF_TYPES: string[] = ["markdown", "canvas", "kanban", "bases"];
 
+// The custom view type registered for the RSS homepage kind. Declared here (not
+// in rss-view.ts) so homepage.ts can reference it without importing the view
+// module, avoiding a runtime import cycle.
+export const RSS_VIEW_TYPE: string = "homepage-rss";
+
 export const DEFAULT: string = "Main Homepage";
 export const MOBILE: string = "Mobile Homepage";
 
@@ -25,8 +30,9 @@ export interface HomepageData {
 	pin: boolean,
 	commands: CommandData[],
 	alwaysApply: boolean,
-	hideReleaseNotes: boolean
-} 
+	hideReleaseNotes: boolean,
+	rssRefreshMinutes: number
+}
 
 export interface CommandData {
 	id: string,
@@ -58,7 +64,8 @@ export enum Kind {
 	DailyNote = "Daily Note",
 	WeeklyNote = "Weekly Note",
 	MonthlyNote = "Monthly Note",
-	YearlyNote = "Yearly Note"
+	YearlyNote = "Yearly Note",
+	Rss = "RSS"
 }
 
 export enum Period {
@@ -68,7 +75,7 @@ export enum Period {
 }
 
 export const UNCHANGEABLE: Kind[] = [Kind.Random, Kind.Graph, Kind.None, ...PERIODIC_KINDS];
-export const ILLEGIBLE: Kind[] = [Kind.None, Kind.Graph, Kind.Workspace];
+export const ILLEGIBLE: Kind[] = [Kind.None, Kind.Graph, Kind.Workspace, Kind.Rss];
 
 export class Homepage {
 	plugin: HomepagePlugin;
@@ -174,8 +181,9 @@ export class Homepage {
 		
 		try {
 			if (this.data.kind as Kind === Kind.Graph) leaf = await this.launchGraph(mode);
+			else if (this.data.kind as Kind === Kind.Rss) leaf = await this.launchRss(mode);
 			else leaf = await this.launchNote(mode);
-					
+
 			await this.configure(leaf);
 		}
 		catch {
@@ -191,6 +199,13 @@ export class Homepage {
 		
 		this.app.commands.executeCommandById("graph:open");
 		return this.app.workspace.getActiveViewOfType(OView)!.leaf;
+	}
+
+	async launchRss(mode: Mode): Promise<WorkspaceLeaf> {
+		const leaf = this.app.workspace.getLeaf(mode == Mode.Retain);
+		await leaf.setViewState({ type: RSS_VIEW_TYPE, active: true });
+		this.app.workspace.setActiveLeaf(leaf);
+		return leaf;
 	}
 	
 	async launchNote(mode: Mode): Promise<WorkspaceLeaf> {
@@ -278,7 +293,8 @@ export class Homepage {
 	
 	getOpened(): WorkspaceLeaf[] {
 		if (this.data.kind as Kind == Kind.Graph) return this.app.workspace.getLeavesOfType("graph");
-		
+		if (this.data.kind as Kind == Kind.Rss) return this.app.workspace.getLeavesOfType(RSS_VIEW_TYPE);
+
 		const leaves = LEAF_TYPES.flatMap(i => this.app.workspace.getLeavesOfType(i));
 
 		return leaves.filter(leaf => {

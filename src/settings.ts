@@ -36,7 +36,8 @@ export const DEFAULT_DATA: HomepageData = {
 	pin: false,
 	commands: [],
 	alwaysApply: false,
-	hideReleaseNotes: false
+	hideReleaseNotes: false,
+	rssRefreshMinutes: 5
 };
 
 export class HomepageSettingTab extends PluginSettingTab {
@@ -117,9 +118,21 @@ export class HomepageSettingTab extends PluginSettingTab {
 						text.setDisabled(true);
 					});
 				}
+				else if (kind === Kind.Rss) {
+					// RSS takes a raw feed URL, not a vault path: no file
+					// suggestor, and no normalizePath sanitising of the value.
+					setting.addText(text => {
+						text.setPlaceholder("https://example.com/feed.xml");
+						text.setValue(this.plugin.homepage.data.value === DEFAULT_DATA.value ? "" : this.plugin.homepage.data.value);
+						text.onChange(async (value) => {
+							this.plugin.homepage.data.value = value.trim() || DEFAULT_DATA.value;
+							await this.plugin.homepage.save();
+						});
+					});
+				}
 				else {
 					setting.addText(text => {
-						new suggestor!(this.app, text.inputEl);
+						if (suggestor) new suggestor(this.app, text.inputEl);
 						text.setPlaceholder(DEFAULT_DATA.value)
 							text.setValue(DEFAULT_DATA.value == this.plugin.homepage.data.value ? "" : this.plugin.homepage.data.value)
 							text.onChange(async (value) => {
@@ -195,7 +208,26 @@ export class HomepageSettingTab extends PluginSettingTab {
 			});
 		}
 		
-		if (!Platform.isMobile) {	
+		if (kind === Kind.Rss) {
+			new HomepageSettingGroup(this, "rssGroup")
+				.addSetting(setting => {
+					setting
+						.setName(tr("rssRefresh"))
+						.setDesc(tr("rssRefreshDesc"))
+						.addDropdown(dropdown => {
+							dropdown.addOption("1", tr("rssRefresh1"));
+							dropdown.addOption("5", tr("rssRefresh5"));
+							dropdown.addOption("60", tr("rssRefresh60"));
+							dropdown.setValue(String(this.plugin.homepage.data.rssRefreshMinutes || 5));
+							dropdown.onChange(async value => {
+								this.plugin.homepage.data.rssRefreshMinutes = parseInt(value, 10);
+								await this.plugin.homepage.save();
+							});
+						});
+				});
+		}
+
+		if (!Platform.isMobile) {
 			new ButtonComponent(this.containerEl)
 				.setButtonText(tr("copyDebugInfo"))
 				.setClass("nv-debug-button")

@@ -27,7 +27,22 @@ export const RU: Record<string, string> = {
 	[Kind.WeeklyNote]: "Еженедельная заметка",
 	[Kind.MonthlyNote]: "Ежемесячная заметка",
 	[Kind.YearlyNote]: "Ежегодная заметка",
-	
+	[Kind.Rss]: "RSS",
+
+	//Settings UI + RSS
+	"RSSDesc": "Укажите URL-адрес RSS- или Atom-ленты. Последние записи ленты будут показаны как домашняя страница.",
+	rssGroup: "RSS-лента",
+	rssRefresh: "Интервал обновления",
+	rssRefreshDesc: "Как долго загруженная лента кэшируется до обновления домашней страницы.",
+	rssRefresh1: "1 минута",
+	rssRefresh5: "5 минут",
+	rssRefresh60: "1 час",
+	rssLoading: "Загрузка ленты…",
+	rssNoUrl: "URL-адрес ленты не задан. Добавьте URL RSS- или Atom-ленты в настройках домашней страницы.",
+	rssError: "Не удалось загрузить ленту.",
+	rssStale: "Показана последняя сохранённая лента — обновить не удалось.",
+	rssEmpty: "В этой ленте нет записей.",
+
 	//Period enum
 	[Period.Both]: "Оба варианта",
 	[Period.Startup]: "Только при запуске",

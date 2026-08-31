@@ -27,7 +27,8 @@ export const EN: Record<string, string> = {
 	[Kind.WeeklyNote]: "Weekly Note",
 	[Kind.MonthlyNote]: "Monthly Note",
 	[Kind.YearlyNote]: "Yearly Note",
-	
+	[Kind.Rss]: "RSS",
+
 	//Period enum
 	[Period.Both]: "Both",
 	[Period.Startup]: "Startup only",
@@ -109,6 +110,20 @@ export const EN: Record<string, string> = {
 	"Weekly noteDesc": "Your Periodic Weekly Note will be used.",
 	"Monthly noteDesc": "Your Periodic Monthly Note will be used.",
 	"Yearly noteDesc": "Your Periodic Yearly Note will be used.",
+	"RSSDesc": "Enter an RSS or Atom feed URL. The feed's recent items will be shown as the homepage.",
+
+	//RSS settings + view
+	rssGroup: "RSS feed",
+	rssRefresh: "Refresh interval",
+	rssRefreshDesc: "How long a fetched feed is cached before the homepage refreshes it.",
+	rssRefresh1: "1 minute",
+	rssRefresh5: "5 minutes",
+	rssRefresh60: "1 hour",
+	rssLoading: "Loading feed…",
+	rssNoUrl: "No feed URL is set. Add an RSS or Atom feed URL in the homepage settings.",
+	rssError: "The feed could not be loaded.",
+	rssStale: "Showing the last saved feed — the latest refresh failed.",
+	rssEmpty: "This feed has no items.",
 	homepageSettingTitle: "Homepage",
 	pluginUnavailableSettings: `The plugin required for this homepage type isn't available.`,
 	copyDebugInfoNotice: "Copied homepage debug information to clipboard",

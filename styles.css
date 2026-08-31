@@ -220,3 +220,106 @@ button.nv-debug-button {
 	height: 100%;
 	margin: 0;
 }
+
+/* RSS homepage view */
+.nv-rss-view {
+	padding: var(--size-4-6) var(--size-4-8);
+	overflow-y: auto;
+	max-width: 42rem;
+	margin: 0 auto;
+}
+
+.nv-rss-header {
+	margin-bottom: var(--size-4-4);
+}
+
+.nv-rss-feed-title {
+	margin: 0 0 var(--size-4-1) 0;
+	font-size: var(--font-ui-large);
+	color: var(--text-normal);
+}
+
+.nv-rss-stale {
+	font-size: var(--font-ui-smaller);
+	margin-top: var(--size-4-1);
+}
+
+.nv-rss-message {
+	color: var(--text-muted);
+	padding: var(--size-4-4) 0;
+}
+
+.nv-rss-items {
+	display: flex;
+	flex-direction: column;
+	gap: var(--size-4-3);
+}
+
+.nv-rss-item {
+	padding: var(--size-4-3) var(--size-4-4);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m);
+	background-color: var(--background-primary);
+	transition: border-color 0.1s ease-in-out;
+}
+
+.nv-rss-item:hover {
+	border-color: var(--background-modifier-border-hover);
+}
+
+.nv-rss-title-row {
+	display: flex;
+	align-items: baseline;
+	gap: var(--size-4-1);
+}
+
+.nv-rss-title {
+	font-weight: var(--font-semibold);
+	font-size: var(--font-ui-medium);
+	color: var(--text-accent);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.nv-rss-title:hover {
+	text-decoration: underline;
+}
+
+.nv-rss-external-icon {
+	display: inline-flex;
+	align-items: center;
+	color: var(--text-faint);
+}
+
+.nv-rss-external-icon .svg-icon {
+	width: var(--icon-s);
+	height: var(--icon-s);
+}
+
+.nv-rss-meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--size-4-2);
+	margin-top: var(--size-4-1);
+}
+
+.nv-rss-date {
+	font-size: var(--font-ui-smaller);
+	color: var(--text-muted);
+}
+
+.nv-rss-tag {
+	font-size: var(--font-ui-smaller);
+	color: var(--text-muted);
+	background-color: var(--background-modifier-hover);
+	border-radius: var(--radius-s);
+	padding: 0 var(--size-4-2);
+	line-height: var(--line-height-tight);
+}
+
+.nv-rss-summary {
+	margin-top: var(--size-4-2);
+	color: var(--text-normal);
+	line-height: var(--line-height-normal);
+}
